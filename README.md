@@ -241,94 +241,94 @@
 #### Пользователь (User)
 Представляет зарегистрированного пользователя системы.
 
-Атрибуты:
-id - уникальный идентификатор
-email - электронная почта
-role - роль (reader, admin)
-created_at - дата регистрации
+##### Атрибуты:
+- id - уникальный идентификатор
+- email - электронная почта
+- role - роль (reader, admin)
+- created_at - дата регистрации
 
-Связи:
-1:1 с UserProfile
-1:N с AnalyticsEvent
+##### Связи:
+- 1:1 с UserProfile
+- 1:N с AnalyticsEvent
 
 #### Профиль пользователя (UserProfile)
 Расширенный профиль пользователя с предпочтениями и настройками.
 
-Атрибуты:
-user_id (FK -> User.id)
-interests - список тегов интересов
-geo - геолокация пользователя
-notification_settings - настройки уведомлений
+##### Атрибуты:
+- user_id (FK -> User.id)
+- interests - список тегов интересов
+- geo - геолокация пользователя
+- notification_settings - настройки уведомлений
 
-Связи:
-1:1 с User
+##### Связи:
+- 1:1 с User
 
 #### Источник новостей (NewsSource)
 Внешний источник новостей.
 
-Атрибуты:
-id - уникальный идентификатор
-name - название источника
-url - адрес API или RSS
-type - тип интеграции (RSS / REST API)
-is_active - статус активности
+##### Атрибуты:
+- id - уникальный идентификатор
+- name - название источника
+- url - адрес API или RSS
+- type - тип интеграции (RSS / REST API)
+- is_active - статус активности
 
-Связи:
-1:N с NewsArticle
+##### Связи:
+- 1:N с NewsArticle
 
 #### Новость (NewsArticle) 
 Агрегированная новостная единица, полученная из внешнего источника.
 
-Атрибуты:
-id - уникальный идентификатор
-source_id (FK -> NewsSource.id)
-title - заголовок
-description — краткое описание / аннотация
-original_url - ссылка на оригинал
-published_at - дата публикации
-status - статус (draft, moderation, published, rejected)
-category_id (FK -> Category.id)
+##### Атрибуты:
+- id - уникальный идентификатор
+- source_id (FK -> NewsSource.id)
+- title - заголовок
+- description — краткое описание / аннотация
+- original_url - ссылка на оригинал
+- published_at - дата публикации
+- status - статус (draft, moderation, published, rejected)
+- category_id (FK -> Category.id)
 
-Связи:
-N:1 с NewsSourc
-N:1 с Category
-N:M с Tag
-1:N с AnalyticsEvent
+##### Связи:
+- N:1 с NewsSourc
+- N:1 с Category
+- N:M с Tag
+- 1:N с AnalyticsEvent
 
 #### Категория (Category)
 Категория новости (политика, спорт, технологии и т.д.).
 
-Атрибуты:
-id - уникальный идентификатор
-name - название категории
+##### Атрибуты:
+- id - уникальный идентификатор
+- name - название категории
 
-Связи:
-1:N с NewsArticle
+##### Связи:
+- 1:N с NewsArticle
 
 #### Тег (Tag)
 Тематическая метка для гибкой фильтрации и персонализации.
 
-Атрибуты:
-id - уникальный идентификатор
-name - название тега
+##### Атрибуты:
+- id - уникальный идентификатор
+- name - название тега
 
-Связи:
-N:M с NewsArticle
-используется в UserProfile.interests
+##### Связи:
+- N:M с NewsArticle
+- используется в UserProfile.interests
 
 #### Событие взаимодейстивя (AnalyticsEvent)
 Событие пользовательского взаимодействия с контентом.
 
-Атрибуты:
-id - уникальный идентификатор
-user_id (FK -> User.id)
-article_id (FK -> NewsArticle.id)
-type - тип события (view, click)
-timestamp - время события
+##### Атрибуты:
+- id - уникальный идентификатор
+- user_id (FK -> User.id)
+- article_id (FK -> NewsArticle.id)
+- type - тип события (view, click)
+- timestamp - время события
 
-Связи:
-N:1 с User
-N:1 с NewsArticle
+##### Связи:
+- N:1 с User
+- N:1 с NewsArticle
 
 ---
 
