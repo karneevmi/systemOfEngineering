@@ -157,7 +157,7 @@
 - хранить историю изменений контента
 - обеспечивать доступ к журналам аудита администраторам
 
-<img align="right" width="200" src="diagram.svg">
+<img align="right" width="700" src="diagram.svg">
 
 ---
 
@@ -233,7 +233,7 @@
 - **Системы аналитики (Google Analytics)**  
   Используются для сбора данных о пользовательской активности.
 
-  <img align="right" width="200" src="систновостей.jpg">
+  <img align="right" width="700" src="систновостей.jpg">
 
 ---
 
@@ -333,7 +333,7 @@
 - N:1 с User
 - N:1 с NewsArticle
 
-  <img align="right" width="200" src="модельпредмобл.jpg">
+  <img align="right" width="700" src="модельпредмобл.jpg">
 
 ---
 
