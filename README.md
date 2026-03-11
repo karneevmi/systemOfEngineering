@@ -158,32 +158,7 @@
 - обеспечивать доступ к журналам аудита администраторам
 
 
-
-
-
-
-
-
-
-
-
-
-
-<img align="right" width="700" src="diagram.svg">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<img align="right" width="300" src="diagram.svg">
 
 
 ---
@@ -261,30 +236,7 @@
   Используются для сбора данных о пользовательской активности.
 
 
-
-
-
-
-
-
-
-
-
-
-  <img align="right" width="700" src="систновостей.jpg">
-
-
-
-
-
-
-
-
-
-
-
-
-
+  <img align="right" width="300" src="систновостей.jpg">
 
 
 ---
@@ -386,28 +338,7 @@
 - N:1 с NewsArticle
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  <img align="right" width="700" src="модельпредмобл.jpg">
-
-
-
-
-
-
-
-
-
+  <img align="right" width="300" src="модельпредмобл.jpg">
 
 
 ---
