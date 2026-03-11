@@ -2,7 +2,7 @@
 *Architectural & Product Documentation*
 
 ## Contents
-<img align="right" width="200" src="images/logo.png">
+<img align="right" width="200" src="diagram.svg">
 
 - [Обзор проекта](#обзор-проекта)
 - [Бизнес-кейс](#бизнес-кейс)
