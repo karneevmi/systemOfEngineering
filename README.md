@@ -441,6 +441,168 @@
 - Облегчает код-ревью и поддерживает чистоту репозитория.
 
 ---
+## Общая стратегия хранения
+
+### PostgreSQL
+
+#### Users + Profiles
+
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    role TEXT CHECK (role IN ('reader', 'admin')) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+)
+
+CREATE TABLE user_profiles (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    geo TEXT,
+    interests JSONB,
+    notification_settings JSONB,
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+
+#### Источники
+
+CREATE TABLE news_sources (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    url TEXT NOT NULL,
+    type TEXT CHECK (type IN ('rss', 'api')) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW()
+)
+
+#### Новости (ядро системы)
+
+CREATE TABLE news_articles (
+    id BIGSERIAL PRIMARY KEY,
+    source_id BIGINT REFERENCES news_sources(id),
+    title TEXT NOT NULL,
+    description TEXT,
+    content TEXT,
+    original_url TEXT UNIQUE,
+    published_at TIMESTAMP,
+    status TEXT CHECK (
+        status IN ('draft', 'moderation', 'published', 'rejected')
+    ),
+    category_id BIGINT,
+    created_at TIMESTAMP DEFAULT NOW()
+)
+
+#### Категории
+
+CREATE TABLE categories (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+)
+
+#### Теги (ключ к персонализации)
+
+CREATE TABLE tags (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT UNIQUE NOT NULL
+)
+
+#### Связь статьи и тегов (M:N)
+
+CREATE TABLE article_tags (
+    article_id BIGINT REFERENCES news_articles(id) ON DELETE CASCADE,
+    tag_id BIGINT REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (article_id, tag_id)
+)
+
+#### Интересы пользователя
+
+CREATE TABLE user_interests (
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    tag_id BIGINT REFERENCES tags(id),
+    weight FLOAT DEFAULT 1.0,
+    PRIMARY KEY (user_id, tag_id)
+)
+
+#### Аналитика
+
+CREATE TABLE analytics_events (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT,
+    article_id BIGINT,
+    type TEXT CHECK (type IN ('view', 'click')),
+    timestamp TIMESTAMP DEFAULT NOW()
+)
+
+#### Реклама
+
+CREATE TABLE ads (
+    id BIGSERIAL PRIMARY KEY,
+    title TEXT,
+    content TEXT,
+    target_tags JSONB,
+    cpm FLOAT,
+    is_active BOOLEAN DEFAULT TRUE
+)
+
+#### Партиционирование
+
+PARTITION BY RANGE (published_at)
+
+Пример:
+
+news_2026_01
+news_2026_02
+
+Итог:
+быстрые SELECT и лёгкая очистка старых данных
+
+#### Elasticsearch (продвинутый поиск)
+Чтобы не ограничиваться подстроками
+Индекс news_articles
+{
+  "title": "text",
+  "description": "text",
+  "content": "text",
+  "tags": "keyword",
+  "category": "keyword",
+  "published_at": "date"
+}
+
+#### Redis
+
+Кэшируем ленту и топ новости
+feed:user:{id}
+top:news
+
+#### Поток данных
+
+1. парсер получил новость
+2. сохранил в PostgreSQL
+3. отправил в очередь
+4. NLP добавил теги
+5. индекс в Elasticsearch
+6. кеш обновился в Redis
+
+---
+## Проектирование UI
+
+### Цель интерфейса:
+доставить новость за ≤ 2 клика (CTR (click-through rate) ↑)
+удержать пользователя в ленте (session time ↑)
+собрать максимум сигналов (для рекомендаций) (bounce ↓)
+
+### Информационная архитектура
+
+Главная (Feed)
+ ├── Категории
+ ├── Поиск
+ ├── Статья
+ ├── Профиль
+ └── Настройки
+
+ ### Главный экран - ЛЕНТА
+   <img align="right" width="300" src="главный.jpg">
+
+---
 
 ## Методология разработки
 
